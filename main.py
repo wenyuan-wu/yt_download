@@ -1,12 +1,14 @@
 from pytube import YouTube
 import ffmpeg
 import os
+from slugify import slugify
 
 
 def download_yt(yt_url, res="2160p"):
     yt = YouTube(yt_url)
     # print(yt.thumbnail_url)
     file_name = yt.title
+    file_name = slugify(file_name, allow_unicode=True)
     video_str = yt.streams.filter(adaptive=True, res="2160p")[0]
     print(f"Video stream: {video_str}")
     audio_str = yt.streams.filter(adaptive=True, only_audio=True)[-1]
