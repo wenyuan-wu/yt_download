@@ -9,8 +9,15 @@ def download_yt(yt_url, res="2160p"):
     # print(yt.thumbnail_url)
     file_name = yt.title
     file_name = slugify(file_name, allow_unicode=True)
-    video_str = yt.streams.filter(adaptive=True, res="2160p")[0]
+    # print(yt.streams.filter(adaptive=True).order_by('resolution').desc())
+    video_str = yt.streams.filter(adaptive=True).order_by('resolution').desc().first()
     print(f"Video stream: {video_str}")
+    # try:
+    #     video_str = yt.streams.filter(adaptive=True, res="2160p")[0]
+    # except IndexError:
+    #     print("2160p stream not found, try 1080p instead.")
+    #     video_str = yt.streams.filter(adaptive=True, res="1080p")[0]
+    # print(f"Video stream: {video_str}")
     audio_str = yt.streams.filter(adaptive=True, only_audio=True)[-1]
     print(f"Audio stream: {audio_str}")
     yt.streams.get_by_itag(video_str.itag).download(filename="video.mp4")
